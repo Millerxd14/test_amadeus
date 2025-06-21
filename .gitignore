@@ -1,0 +1,43 @@
+# Archivos de Bytecode y Caché de Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Entornos Virtuales
+.env
+env/
+venv/
+.venv/
+ENV/
+
+# Artefactos de distribución / empaquetado
+build/
+dist/
+*.egg-info/
+*.egg
+
+# Archivos de configuración de IDEs y editores
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Archivos de secretos y configuración local
+# ¡MUY IMPORTANTE! Nunca subas tus secretos a Git.
+.env
+.env.*
+
+# Artefactos de Pruebas
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+
+# Logs
+*.log
+logs/
+
+# Archivos del sistema operativo
+.DS_Store
+Thumbs.db
