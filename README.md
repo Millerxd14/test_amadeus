@@ -1,53 +1,99 @@
-# Amadeus Test API
+# Sistema de Agendamiento de Clases (Prueba)
 
-A FastAPI project for testing the Amadeus API integration.
+Este proyecto es un backend de API desarrollado con FastAPI como un sistema de prueba para el agendamiento de clases.
 
-## Setup
+## Descripción
 
-1. Ensure Python 3.7+ is installed
-2. Create a virtual environment (already done)
-```
-python -m venv venv
-```
+El sistema gestiona el agendamiento de clases y se basa en tres modelos principales:
 
-3. Activate the virtual environment
-```
-# On Windows
-venv\Scripts\activate
+*   **Profesor (`Teacher`)**: Gestiona la información de los profesores.
+*   **Estudiante (`Student`)**: Gestiona la información de los estudiantes.
+*   **Clase Agendada (`ClassSchedule`)**: Representa una clase programada entre un profesor y un estudiante.
 
-# On macOS/Linux
-source venv/bin/activate
-```
+Cada modelo cuenta con sus propias operaciones CRUD (Crear, Leer, Actualizar, Eliminar).
 
-4. Install dependencies
-```
-pip install -r requirements.txt
-```
+---
 
-## Running the application
+## Autenticación
 
-```
-uvicorn main:app --reload
-```
+Para realizar cualquier operación en la API (excepto el login), es **obligatorio estar autenticado**. El sistema utiliza autenticación basada en JWT.
 
-The API will be available at http://127.0.0.1:8000
+### Usuarios de Prueba
 
-## API Documentation
+Para facilitar las pruebas, se han creado los siguientes usuarios. El nombre de usuario corresponde al número de documento.
 
-FastAPI automatically generates API documentation:
-- Swagger UI: http://127.0.0.1:8000/docs
-- ReDoc: http://127.0.0.1:8000/redoc
+*   **Usuario Profesor**:
+    *   **Username**: `19988022`
+    *   **Password**: `123456`
+*   **Usuario Estudiante**:
+    *   **Username**: `1007708719`
+    *   **Password**: `123456`
 
-## Running with Docker
+---
 
-1.  **Build the Docker image:**
+## Acceso a la Aplicación
+
+*   **Documentación de la API (Swagger UI)**: La documentación interactiva se encuentra en la ruta `/docs`.
+    *   URL: [http://localhost:5660/docs](http://localhost:5660/docs)
+*   **Frontend (Login)**: La interfaz de usuario para iniciar sesión se encuentra en la ruta `/static/videos/index.html`.
+    *   URL: [http://localhost:5660/static/videos/index.html](http://localhost:5660/static/videos/index.html)
+
+---
+
+## Cómo Ejecutar el Proyecto
+
+### Opción 1: Usando Docker (Recomendado)
+
+1.  **Construir la imagen de Docker:**
     ```bash
     docker build -t amadeus-fastapi-app .
     ```
 
-2.  **Run the Docker container:**
+2.  **Ejecutar el contenedor:**
+    ```bash
+    docker run -p 5660:5660 amadeus-fastapi-app
+    ```
+
+3.  **(Opcional) Ejecutar con Hot-Reload:**
+    Si deseas que los cambios en el código se reflejen automáticamente sin tener que reconstruir la imagen, monta un volumen:
     ```bash
     docker run -p 5660:5660 -v .:/app amadeus-fastapi-app
     ```
 
-The application will be accessible at [http://localhost:5660](http://localhost:5660) and the API documentation at [http://localhost:5660/docs](http://localhost:5660/docs).
+### Opción 2: Entorno Local
+
+1.  **Crear y activar un entorno virtual** (si no lo has hecho).
+    ```bash
+    # Crear entorno
+    python -m venv venv
+    # Activar en macOS/Linux
+    source venv/bin/activate
+    # Activar en Windows
+    # venv\Scripts\activate
+    ```
+
+2.  **Instalar las dependencias:**
+    ```bash
+    pip install -r requirements.txt
+    ```
+
+3.  **Ejecutar el servidor Uvicorn:**
+    Desde la raíz del proyecto, ejecuta el siguiente comando:
+    ```bash
+    uvicorn app.main:app --host 0.0.0.0 --port 5660 --reload --log-level info
+    ```
+
+---
+
+## Pruebas (Testing)
+
+El proyecto incluye una suite de pruebas desarrollada con `pytest`.
+
+1.  **Ubicación de las pruebas:**
+    Las pruebas se encuentran en el directorio `app/test/`.
+
+2.  **Ejecutar las pruebas:**
+    Desde la raíz del proyecto, simplemente ejecuta el comando:
+    ```bash
+    pytest
+    ```
