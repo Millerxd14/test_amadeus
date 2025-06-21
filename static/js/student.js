@@ -17,6 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const classMessage = document.getElementById('class-message');
 
     loadTeachers();
+    loadClasses();
     const kind = localStorage.getItem('kind');
     if(kind !== 'student') {
         window.location.href = '/static/index.html'; // Redirect to login
@@ -142,4 +143,67 @@ const loadTeachers = async () => {
     }
 };
 
+
+
+const loadClasses = async () => {
+    const classTableBody = document.getElementById('classes-table-body');
+    if (!classTableBody) return;
+
+    try {
+        const response = await fetch('/class-schedules/', {
+            method: 'GET',
+            headers: authHeader
+        });
+        console.log('response', response);
+        if (!response.ok) {
+            throw new Error('No se pudieron cargar las clases.');
+        }
+
+        const classes = await response.json();
+        classTableBody.innerHTML = ''; // Limpiar filas existentes
+
+        if (classes.length === 0) {
+            const row = document.createElement('tr');
+            const cell = document.createElement('td');
+            cell.colSpan = 3; // Asumiendo 3 columnas
+            cell.textContent = 'No hay clases programadas.';
+            cell.className = 'text-center';
+            row.appendChild(cell);
+            classTableBody.appendChild(row);
+            return;
+        }
+
+        classes.forEach(cls => {
+            const row = document.createElement('tr');
+
+            const studentCell = document.createElement('td');
+            studentCell.textContent = `${cls.student.first_name} ${cls.student.last_name}`;
+            row.appendChild(studentCell);
+
+            const teacherCell = document.createElement('td');
+            teacherCell.textContent = `${cls.teacher.first_name} ${cls.teacher.last_name}`;
+            row.appendChild(teacherCell);
+
+            const startCell = document.createElement('td');
+            startCell.textContent = new Date(cls.start_datetime).toLocaleString();
+            row.appendChild(startCell);
+
+            const endCell = document.createElement('td');
+            endCell.textContent = new Date(cls.end_datetime).toLocaleString();
+            row.appendChild(endCell);
+
+            classTableBody.appendChild(row);
+        });
+    } catch (error) {
+        console.error('Error al cargar las clases:', error);
+        classTableBody.innerHTML = '';
+        const row = document.createElement('tr');
+        const cell = document.createElement('td');
+        cell.colSpan = 3;
+        cell.textContent = 'Error al cargar las clases.';
+        cell.className = 'text-danger text-center';
+        row.appendChild(cell);
+        classTableBody.appendChild(row);
+    }
+};
     
